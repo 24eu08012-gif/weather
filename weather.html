@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weather App</title>
+</head>
+<body>
+  <form id="form" class="parent container">
+    <input 
+      type="text" 
+      placeholder="Enter city name" 
+      id="city-name" 
+      required
+    />
+    <button type="submit">Submit</button>
+  </form>
+
+  <div id="result" class="result-container"></div>
+
+  <script>
+    const form = document.getElementById("form");
+    const result = document.getElementById("result");
+    const cityName = document.getElementById("city-name");
+    const apiKey = "94e1a9cd6624a9e838a3712c9b348f69";
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityName.value}&appid=${apiKey}&units=metric`;
+
+      fetch(apiUrl)
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          if (data.cod === 200) {
+            result.innerHTML = `
+              <h2>${data.name}</h2>
+              <p>🌡 ${data.main.temp} °C</p>
+              <p>☁ ${data.weather[0].description}</p>
+            `;
+          } else {
+            result.innerHTML = `<p>❌ City not found</p>`;
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+          result.innerHTML = `<p>⚠ Error fetching data</p>`;
+        });
+    });
+  </script>
+</body>
+</html>
